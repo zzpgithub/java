@@ -29,7 +29,22 @@ class BooleanOperatorsTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        boolean[] expectedResult = {};
+        boolean[] expectedResult = {
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true};
+
         // --end-->
 
         assertArrayEquals(expectedResult, actualResults);
@@ -42,7 +57,7 @@ class BooleanOperatorsTest {
 
         // TODO: please write down the result directly to pass the test.
         // <--start
-        final int expected = 0;
+        final int expected = 0x0004_ab00;
         // --end-->
 
         assertEquals(expected, value & mask);
@@ -55,7 +70,7 @@ class BooleanOperatorsTest {
 
         // TODO: please write down the result directly to pass the test.
         // <--start
-        final int expected = 0;
+        final int expected = 0x1234_abcd;
         // --end-->
 
         assertEquals(expected, value | mask);
@@ -67,7 +82,7 @@ class BooleanOperatorsTest {
 
         // TODO: please write down the result directly to pass the test.
         // <--start
-        final int expected = 0;
+        final int expected = 0xffff_0000;
         // --end-->
 
         assertEquals(expected, ~value);
