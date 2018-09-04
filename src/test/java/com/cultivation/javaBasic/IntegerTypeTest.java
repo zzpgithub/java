@@ -3,8 +3,7 @@ package com.cultivation.javaBasic;
 import org.junit.jupiter.api.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IntegerTypeTest {
 
@@ -22,6 +21,13 @@ class IntegerTypeTest {
         assertEquals(maximumSymbol, maximum);
         assertEquals(minimumSymbol, minimum);
     }
+    @Test
+    void should_be_negative(){
+        int num = 0x0000_0001;
+        for (int i = 0; i < 31; i++) {
+            assertTrue((num << i)>0);
+        }
+    }
 
     @Test
     void should_get_range_of_primitive_short_type() {
@@ -36,6 +42,8 @@ class IntegerTypeTest {
 
         assertEquals(maximumSymbol, maximum);
         assertEquals(minimumSymbol, minimum);
+        assertTrue(0x8000_0000<0);
+        assertTrue(-0x7fff_ffff<0);
     }
 
     @Test
@@ -170,10 +178,12 @@ class IntegerTypeTest {
 
     private int add(int left, int right) {
         // TODO: Please implement the method. Adding two numbers.
+        return Math.addExact(left,right);
+
         // The method should throw ArithmeticException if overflow or underflow happens.
-        if((long)left+(long)right>Integer.MAX_VALUE || (long)left+(long)right<Integer.MIN_VALUE)
-            throw new ArithmeticException();
-        return left+right;
+//        if((long)left+(long)right>Integer.MAX_VALUE || (long)left+(long)right<Integer.MIN_VALUE)
+//            throw new ArithmeticException();
+//        return left+right;
     }
 
     /*

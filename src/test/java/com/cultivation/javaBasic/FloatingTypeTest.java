@@ -1,18 +1,57 @@
 package com.cultivation.javaBasic;
 
-import com.cultivation.javaBasicExtended.myIoC.util.DependsOnWithDefaultConstructor;
 import org.junit.jupiter.api.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import javax.xml.crypto.dom.DOMCryptoContext;
-
-import java.util.zip.DeflaterOutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FloatingTypeTest {
+    @Test
+    void should_test_implicit_explicit_conversion() {
+        byte b = 5;
+        short byte2short = b;
+        int byte2int = b;
+        long byte2long = b;
+        float byte2float = b;
+        double byte2double = b;
+
+        short s = 100;
+        byte short2byte = (byte)s;
+        int short2int = s;
+        long short2ling =s;
+        float short2float = s;
+        double short2double = s;
+
+        int i = 1000;
+        byte int2byte = (byte)i;
+        short int2short = (short)i;
+        long int2long = i;
+        float int2float = i;
+        double int2double = i;
+
+        long l = 4L;
+        byte long2byte = (byte)l;
+        short long2short = (short)l;
+        int long2int = (int)l;
+        float long2float = l;
+        double long2double = l;
+
+        float f = 23.1f;
+        byte float2byte = (byte)f;
+        short float2short = (short)f;
+        int float2int = (int)f;
+        long float2long = (long)f;
+        double float2double = f;
+
+        double d = 21.01;
+        byte double2byte = (byte)d;
+        short double2short = (short)d;
+        int double2int = (int)d;
+        long double2long = (long)d;
+        float double2float = (float)d;
+    }
+
     @Test
     void should_not_get_rounded_result_if_convert_floating_number_to_integer() {
         final float floatingPointNumber = 2.75f;
