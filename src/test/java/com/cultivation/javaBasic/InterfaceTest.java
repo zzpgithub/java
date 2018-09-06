@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class InterfaceTest {
+    class InterfaceTest {
 
     @Test
     void should_support_default_method() {
@@ -14,7 +14,7 @@ class InterfaceTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = "The truth of the universe is 42";
         // --end-->
 
         assertEquals(expected, instance.tellMeTheTruthOfTheUniverse());
@@ -26,7 +26,7 @@ class InterfaceTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = "The truth of the universe is Anime";
         // --end-->
 
         assertEquals(expected, instance.tellMeTheTruthOfTheUniverse());
@@ -38,7 +38,7 @@ class InterfaceTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = "The truth of the universe is Game";
         // --end-->
 
         assertEquals(expected, instance.tellMeTheTruthOfTheUniverse());
