@@ -1,7 +1,6 @@
 package com.cultivation.javaBasic;
 
 import org.junit.jupiter.api.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ class StringTest {
         //
         // It is really easy to pass the test. But you have to tell why.
         // <--start
-        final Optional<Boolean> areSame = Optional.empty();
+        final Optional<Boolean> areSame = Optional.of(false);
         // --end-->
 
         assertEquals("The new string", modifiedString);
@@ -36,9 +35,11 @@ class StringTest {
         //
         // It is really easy to pass the test. But you have to tell why.
         // <--start
-        final Optional<Boolean> areSame = Optional.empty();
+        final Optional<Boolean> areSame = Optional.of(false);
         // --end-->
 
+        boolean[] test = new boolean[2];
+        assertEquals(test[0],false);
         assertEquals("The string with tailing space.", modifiedString);
         assertEquals(areSame.get(), originalString == modifiedString);
     }
@@ -54,7 +55,7 @@ class StringTest {
         //
         // It is really easy to pass the test. But you have to tell why.
         // <--start
-        final Optional<Boolean> areSame = Optional.empty();
+        final Optional<Boolean> areSame = Optional.of(false);
         // --end-->
 
         assertEquals("Part one. Part two.", originalString);
@@ -68,7 +69,7 @@ class StringTest {
 
         // TODO: Take part of the original string according to expectation.
         // <--start
-        final String partOfString = null;
+        final String partOfString = originalString.substring(5, 13);
         // --end-->
 
         final String expectedString = "is great";
@@ -83,7 +84,7 @@ class StringTest {
 
         // TODO: Take part of the original string according to expectation.
         // <--start
-        final String partOfString = null;
+        final String partOfString = originalString.substring(5, 7);
         // --end-->
 
         final String expectedString = "is";
@@ -106,10 +107,21 @@ class StringTest {
 
         // TODO: Extract words in the sentence.
         // <--Start
-        String[] words = null;
+        String[] words = sentence.split(" ");
         // --End-->
 
-        assertArrayEquals(new String[] {"This", "is", "Mike"}, words);
+        assertArrayEquals(new String[]{"This", "is", "Mike"}, words);
+    }
+
+    @Test
+    void test() {
+        char value[] = new char[10];
+        assertEquals('\u0000',value[0]);
+        ///assertEquals(null, value[0]);   ///error 基本数据类型char，默认初始值'\u0000'  null属于对象的。
+
+        String valueString[] = new String[10];
+        String str = valueString[0];
+        assertEquals(null, str); ///对象没赋值前是null,
     }
 
     @SuppressWarnings({"unused", "ConstantConditions"})
@@ -119,10 +131,10 @@ class StringTest {
 
         // TODO: Extract words in the sentence.
         // <--Start
-        String[] words = null;
+        String[] words = sentence.split("/");
         // --End-->
 
-        assertArrayEquals(new String[] {"This", "is", "Mike"}, words);
+        assertArrayEquals(new String[]{"This", "is", "Mike"}, words);
     }
 
     @SuppressWarnings({"unused", "StringBufferReplaceableByString", "MismatchedQueryAndUpdateOfStringBuilder"})
@@ -134,12 +146,26 @@ class StringTest {
         // TODO: Create string using StringBuilder
         // <--Start
         StringBuilder builder = new StringBuilder();
+       // builder.append("|---|\n").append("|   |\n").append("|---|\n");
+
+        for(int i=0; i< height; i++){
+            builder.append("|");
+            for(int j=1; j<width -1 ;j++){
+                if(i==0 ||i==height-1){
+                    builder.append("-");
+                }else{
+                    builder.append(" ");
+                }
+            }
+            builder.append("|");
+            builder.append("\n");
+        }
         // --End-->
 
         final String expected =
-            "|---|\n" +
-            "|   |\n" +
-            "|---|\n";
+                        "|---|\n" +
+                        "|   |\n" +
+                        "|---|\n";
 
         assertEquals(expected, builder.toString());
     }
@@ -152,6 +178,10 @@ class StringTest {
         int sum = 0;
         // TODO: Write some code to calculate the checksum of the string. The checksum is the sum of each string char.
         // <--Start
+        for (int i = 0; i < text.length(); i++) {
+            sum += text.charAt(i);
+            ////////codePointAt(i);???区别
+        }
         // --End-->
 
         assertEquals(3655, sum);
@@ -162,12 +192,12 @@ class StringTest {
         final String expected = "なにこれ";
 
         // TODO: Write actual string using unicode escape. The unicode is as follows:
-        // な - U+306a
+        // な - U+306a        30 6a  占据1个字节,2个byte， 即一个char
         // に - U+306b
         // こ - U+3053
         // れ - U+308c
         // <--Start
-        final String actual = null;
+        final String actual = "\u306a\u306b\u3053\u308c";
         // --End-->
 
         assertEquals(expected, actual);
@@ -180,10 +210,21 @@ class StringTest {
 
         // TODO: Modify the following code to create new string from original String
         // <--Start
-        final String reversed = null;
+        final String reversed = new StringBuilder(original).reverse().toString();
         // --End-->
 
         assertEquals("654321", reversed);
+    }
+
+    @Test
+    void should_test_final_array_reverse() {
+        final int[] value = new int[]{1,2,3,4,5,6};
+        for (int i = 0; i < value.length/2; i++) {
+            int temp = value[i];
+            value[i] = value[value.length-1-i];
+            value[value.length-1-i] = temp;
+        }
+        assertArrayEquals(new int[]{6,5,4,3,2,1},value);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -197,8 +238,8 @@ class StringTest {
 
         // TODO: Please change the value of the following 2 lines to pass the test.
         // <--start
-        Optional<Boolean> actualResultOfEqual = Optional.empty();
-        Optional<Boolean> actualResultOfEqualIgnoreCase = Optional.empty();
+        Optional<Boolean> actualResultOfEqual = Optional.of(false);
+        Optional<Boolean> actualResultOfEqualIgnoreCase = Optional.of(true);
         // --end-->
 
         assertEquals(equalResult, actualResultOfEqual);
@@ -207,15 +248,15 @@ class StringTest {
 
     @Test
     void should_get_code_point_count() {
-        final String withSurrogatePairs =
-            new String(Character.toChars(0x20B9F)) + " is a character that you may not know";
+        final String withSurrogatePairs =   /////  0x20B9F int型4字节  两个char表示一个codepoint(码点，int型数字)
+                new String(Character.toChars(0x20B9F)) + " is a character that you may not know";
 
         // TODO: please modify the following code to pass the test
         // <--start
         // TODO: please write down the result directly.
-        final int expectedCharLength = 0;
+        final int expectedCharLength = 39;
         // TODO: please call some method to calculate the result.
-        final int actualCodePointLength = 0;
+        final int actualCodePointLength = withSurrogatePairs.codePointCount(0,withSurrogatePairs.length());
         // --end-->
 
         assertEquals(expectedCharLength, withSurrogatePairs.length());
@@ -225,17 +266,18 @@ class StringTest {
     @Test
     void should_copy_all_code_point_to_array() {
         final String withSurrogatePairs =
-            new String(Character.toChars(0x20B9F)) + " is funny";
+                new String(Character.toChars(0x20B9F)) + " is funny";
 
         final int[] codePoints = getCodePointsFromString(withSurrogatePairs);
 
         assertArrayEquals(
-            new int[] {0x20B9F, (int)' ', (int)'i', (int)'s', (int)' ', (int)'f', (int)'u', (int)'n', (int)'n', (int)'y'},
-            codePoints);
+                new int[]{0x20B9F, (int) ' ', (int) 'i', (int) 's', (int) ' ', (int) 'f', (int) 'u', (int) 'n', (int) 'n', (int) 'y'},
+                codePoints);
     }
 
     @Test
     void should_format_string() {
+
         final String name = "Harry";
         final int age = 23;
 
@@ -243,7 +285,7 @@ class StringTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expectedText = null;
+        final String expectedText = "Hello, Harry. Next year, you will be 23.";
         // --end-->
 
         assertEquals(expectedText, text);
@@ -252,15 +294,21 @@ class StringTest {
     private int[] getCodePointsFromString(String withSurrogatePairs) {
         // TODO: please implement the method to the pass the test
         // <--start
-        throw new NotImplementedException();
+       // return withSurrogatePairs.codePoints().toArray();
+        int[] result = new int[withSurrogatePairs.codePointCount(0, withSurrogatePairs.length())];
+        for (int i = 0, j = 0; i < withSurrogatePairs.length(); i = withSurrogatePairs.offsetByCodePoints(i, 1)) {
+            result[j++] = withSurrogatePairs.codePointAt(i);
+        }
+        return result;
+        //throw new NotImplementedException();
         // --end-->
     }
 
     /*
      * - List other string format conversion chars.
-     *   * d - decimal integer
-     *   * x - hexadecimal integer
-     *   * o - octal integer
+     *   * d - decimal integer      十进制
+     *   * x - hexadecimal integer  十六
+     *   * o - octal integer         八
      *   * f - fixed-point floating point
      *   * e - exponential floating point
      *   * g - general floating point (the shorter of e and f)

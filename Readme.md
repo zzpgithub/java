@@ -11,8 +11,8 @@ For `javaBasic` package:
 1. ArrayTest
 1. StringTest
 1. ObjectTest
-1. InheritanceTest
-1. ReflectionTest
+1. InheritanceTest 继承
+1. ReflectionTest 反射   查文档
 1. InterfaceTest
 1. LambdaTest
 1. InnerClassTest

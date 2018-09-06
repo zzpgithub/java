@@ -11,6 +11,7 @@ public class InitializationOrderClass {
         logger.clear();
     }
 
+
     public static String[] getLogs() {
         return logger.toArray(new String[0]);
     }
@@ -33,5 +34,10 @@ public class InitializationOrderClass {
 
     public InitializationOrderClass(int argument) {
         logger.add("Constructor with argument");
+    }
+
+
+    {
+        logger.add("initialization_block");
     }
 }

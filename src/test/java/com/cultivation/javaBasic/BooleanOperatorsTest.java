@@ -87,4 +87,11 @@ class BooleanOperatorsTest {
 
         assertEquals(expected, ~value);
     }
+
+    @Test
+    void should_operator_and_priority_or() {  /// & > |
+        int expectedAndPriorOr = 0x000f_ffff;
+        assertEquals(expectedAndPriorOr, 0x000f_f000 & 0x00ff_0000 | 0x0000_ffff);
+        assertEquals(0x000f_f000, 0x000f_f000 | 0x00ff_0000 & 0x0000_ffff);
+    }
 }

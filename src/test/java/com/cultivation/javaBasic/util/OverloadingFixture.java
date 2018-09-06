@@ -1,5 +1,7 @@
 package com.cultivation.javaBasic.util;
 
+import org.junit.jupiter.api.Test;
+
 @SuppressWarnings("unused")
 public class OverloadingFixture {
     public String methodWithOneParameter(String value) {

@@ -1,12 +1,25 @@
 package com.cultivation.javaBasic;
 
-import com.cultivation.javaBasic.util.Employee;
-import com.cultivation.javaBasic.util.MethodWithAnnotation;
+import com.cultivation.javaBasic.util.*;
 import org.junit.jupiter.api.Test;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+class Person {
+
+}
+class Student extends Person{
+
+}
 class ReflectionTest {
     @Test
     void should_be_able_to_get_class_object() {
@@ -15,20 +28,20 @@ class ReflectionTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final Class<? extends Employee> expected = null;
+        final Class<? extends Employee> expected = Employee.class;
         // --end-->
 
         assertEquals(expected, employeeClass);
     }
 
     @Test
-    void should_be_able_to_get_full_qualified_name() {
+    void should_be_able_to_get_full_qualified_name() {  ////qualified 限定  full_qualified_name 全名，包名+类名
         Employee employee = new Employee();
         Class<? extends Employee> employeeClass = employee.getClass();
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = Employee.class.getName();/////可以直接写全名 com.cultivation.javaBasic.util.Employee
         // --end-->
 
         assertEquals(expected, employeeClass.getName());
@@ -37,11 +50,12 @@ class ReflectionTest {
     @SuppressWarnings({"ConstantConditions", "unused"})
     @Test
     void should_be_able_to_instantiate_types_at_runtime() throws Exception {
-        Class<?> theClass = Class.forName("com.cultivation.javaBasic.util.Employee");
+        Class<?> theClass = Class.forName("com.cultivation.javaBasic.util.Employee"); //////直接调用该包
+        /////？ 通配。
 
         // TODO: please created an instance described by `theClass`
         // <--start
-        Employee instance = null;
+        Employee instance = (Employee) theClass.newInstance();////直接返回的是Object类型， 需要强转    （如果？改为Employ， 那么new出来的实例也就是Employ）
         // --end-->
 
         assertEquals("Employee", instance.getTitle());
@@ -54,8 +68,18 @@ class ReflectionTest {
 
         // TODO: please get all public static declared methods of Double. Sorted in an ascending order
         // <--start
-        String[] publicStaticMethods = null;
+        Method[] methods = doubleClass.getDeclaredMethods();
+        List<String> publicStaticMethods = new ArrayList<>();
+        for(Method method : methods){
+            //int modifyOfMethod = method.getModifiers();  int 类型的
+            if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())){
+                publicStaticMethods.add(method.getName());
+            }
+        }
+        String[] publicStaticMethodsToString = publicStaticMethods.toArray(new String[0]);
+        Arrays.sort(publicStaticMethodsToString);
         // --end-->
+
 
         final String[] expected = {
             "compare", "doubleToLongBits", "doubleToRawLongBits", "hashCode",
@@ -64,7 +88,7 @@ class ReflectionTest {
             "valueOf"
         };
 
-        assertArrayEquals(expected, publicStaticMethods);
+        assertArrayEquals(expected, publicStaticMethodsToString);
     }
 
     @SuppressWarnings({"unused", "ConstantConditions", "RedundantThrows"})
@@ -74,7 +98,7 @@ class ReflectionTest {
 
         // TODO: please get the value of `getTitle` method using reflection. No casting to Employee is allowed.
         // <--start
-        Object result = null;
+        Object result = employee.getClass().getDeclaredMethod("getTitle").invoke(employee);
         // --end-->
 
         assertEquals("Employee", result);
@@ -87,7 +111,7 @@ class ReflectionTest {
 
         // TODO: please get the class of array item `employees`
         // <--start
-        Class<?> itemClass = null;
+        Class<?> itemClass = employees.getClass().getComponentType();///获取数组元素的类型
         // --end-->
 
         assertEquals(Employee.class, itemClass);
@@ -96,14 +120,37 @@ class ReflectionTest {
     @SuppressWarnings({"ConstantConditions", "unused"})
     @Test
     void should_be_able_to_get_the_methods_who_contains_MyAnnotation_annotation() {
-        Class<MethodWithAnnotation> theClass = MethodWithAnnotation.class;
+        Class<MyTestAnnotation> theClass = MyTestAnnotation.class;
+        Method[] methods = theClass.getDeclaredMethods();
+        List<String> annotationMethodName = new ArrayList<>();
+        for(Method method : methods){
+            Annotation[] annotations = method.getAnnotations();
+            for(Annotation annotation : annotations){
+                if(annotation.annotationType() == TestMyAnnotation.class)
+                    annotationMethodName.add(method.getName());
+            }
+        }
 
-        // TODO: please get the methods who contains MyAnnotation annotation.
-        // <--start
-        String[] methodsContainsAnnotations = null;
-        // --end-->
+        String[] strings = annotationMethodName.toArray(new String[0]);
 
-        assertArrayEquals(new String[] {"theMethod"}, methodsContainsAnnotations);
+        assertArrayEquals(new String[] {"testMyAnnotationMethod"}, strings);
+    }
+
+    @Test
+    void should_test_array_() {
+        Person[] persons = new Person[10];
+        Student[] students = new Student[10];
+
+        //Class<?> studentsClass = students.getClass();
+        Class<?>  studentsSuperClass =  students.getClass().getSuperclass();
+
+        assertNotEquals( persons.getClass(), studentsSuperClass);
+
+
+        Class<?> studentSuperClass = students.getClass().getComponentType().getSuperclass();
+        assertEquals(persons.getClass().getComponentType(), studentSuperClass);
+        //assertNotEquals(Person.class, studentClass);
+
     }
 }
 
