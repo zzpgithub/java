@@ -14,7 +14,7 @@ class LambdaTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expect = null;
+        final String expect = "Hello";
         // --end-->
 
         assertEquals(expect, lambda.getString());
@@ -23,9 +23,9 @@ class LambdaTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void should_be_able_to_bind_to_instance_method() {
-        // TODO: please bind lambda to instanceMethod.
+        // TODO: please bind(捆绑) lambda to instanceMethod.
         // <--start
-        StringFunc lambda = null;
+        StringFunc lambda = () -> instanceMethod();
         // --end-->
 
         assertEquals("instanceMethod", lambda.getString());
@@ -36,7 +36,7 @@ class LambdaTest {
     void should_be_able_to_bind_to_static_method() {
         // TODO: please bind lambda to staticMethod
         // <--start
-        StringFunc lambda = null;
+        StringFunc lambda = () -> staticMethod();
         // --end-->
 
         assertEquals("staticMethod", lambda.getString());
@@ -47,7 +47,7 @@ class LambdaTest {
     void should_bind_to_constructor() {
         // TODO: please bind lambda to constructor of ArrayList<Integer>
         // <--start
-        GenericFunc<ArrayList<Integer>> lambda = null;
+        GenericFunc<ArrayList<Integer>> lambda = () -> new ArrayList<>();
         // --end-->
 
         ArrayList<Integer> value = lambda.getValue();
@@ -65,7 +65,7 @@ class LambdaTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = "5 has been captured.";
         // --end-->
 
         assertEquals(expected, message);
@@ -80,7 +80,7 @@ class LambdaTest {
 
         // TODO: please write down the expected string directly.
         // <--start
-        final String expected = null;
+        final String expected = "The length of captured value is: 4";
         // --end-->
 
         value.setValue("Blah");
@@ -94,7 +94,7 @@ class LambdaTest {
 
         // TODO: please write down the expected string directly.
         // <--start
-        final String expected = null;
+        final String expected = "In the year 2019";
         // --end-->
 
         assertEquals(expected, message);
@@ -107,7 +107,7 @@ class LambdaTest {
 
         // TODO: please modify the following code to pass the test
         // <--start
-        final String expected = null;
+        final String expected = "ThisInClosure";
         // --end-->
 
         assertEquals(expected, stringFunc.getString());
