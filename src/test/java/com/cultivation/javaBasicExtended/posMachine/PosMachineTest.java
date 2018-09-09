@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class PosMachineTest {
     @Test
-    void should_print_empty_if_barcode_is_not_provided() throws IOException {
+    void should_print_empty_if_barcode_is_not_provided() throws IOException { ///barcode 条形码
         PosMachine posMachine = new PosMachine();
         posMachine.readDataSource(createJsonDataBase());
         String receipt = posMachine.printReceipt(null);
