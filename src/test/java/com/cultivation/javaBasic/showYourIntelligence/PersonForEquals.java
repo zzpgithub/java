@@ -3,10 +3,11 @@ package com.cultivation.javaBasic.showYourIntelligence;
 import com.cultivation.javaBasic.util.Person;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class PersonForEquals {
+public class PersonForEquals implements Comparable {
     private final String name;
     private final short yearOfBirth;
 
@@ -32,6 +33,7 @@ public class PersonForEquals {
         return yearOfBirth;
     }
 
+
     @SuppressWarnings("Contract")
     @Override
     public boolean equals(Object obj) {
@@ -51,5 +53,20 @@ public class PersonForEquals {
         return name.hashCode() + yearOfBirth;
         //throw new NotImplementedException();
         // --end-->
+    }
+
+
+    @Override
+    public int compareTo(Object obj) {
+
+        if(obj ==null) throw new NullPointerException();
+
+        PersonForEquals personForEquals = (PersonForEquals)obj;
+
+        int nameCompare = name.compareTo(personForEquals.name);
+        if(nameCompare == 0){
+            return yearOfBirth - personForEquals.yearOfBirth;
+        }
+        return nameCompare;
     }
 }

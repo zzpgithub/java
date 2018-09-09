@@ -2,6 +2,8 @@ package com.cultivation.javaBasic;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -292,18 +294,17 @@ class StringTest {
     }
 
     private int[] getCodePointsFromString(String withSurrogatePairs) {
-        // TODO: please implement the method to the pass the test
-        // <--start
-       // return withSurrogatePairs.codePoints().toArray();
-        int[] result = new int[withSurrogatePairs.codePointCount(0, withSurrogatePairs.length())];
-        for (int i = 0, j = 0; i < withSurrogatePairs.length(); i = withSurrogatePairs.offsetByCodePoints(i, 1)) {
-            result[j++] = withSurrogatePairs.codePointAt(i);
-        }
-        return result;
-        //throw new NotImplementedException();
-        // --end-->
-    }
 
+        // TODO: please implement the method to the pass the test
+
+        int [] result1 = new int[withSurrogatePairs.codePointCount(0,withSurrogatePairs.length())];
+
+        for (int index = 0, j=0;  index<withSurrogatePairs.length();
+             index +=  Character.charCount(Character.codePointAt(withSurrogatePairs,index))){
+            result1[j++] = Character.codePointAt(withSurrogatePairs,index);
+        }
+        return result1;
+    }
     /*
      * - List other string format conversion chars.
      *   * d - decimal integer      十进制
