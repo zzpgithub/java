@@ -6,7 +6,9 @@ public class StackFrameHelper {
     public static String getCurrentMethodName() {
         // TODO: please modify the following code to pass the test
         // <--start
-        throw new NotImplementedException();
+        StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+        return stackTraceElements[1].getClassName()+"."+stackTraceElements[1].getMethodName();
+        //throw new NotImplementedException();
         // --end-->
     }
 }
