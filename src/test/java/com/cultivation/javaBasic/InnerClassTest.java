@@ -11,34 +11,47 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InnerClassTest {
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void should_access_instance_field_of_parent_class() {
-        InnerClassUpdateField instance = new InnerClassUpdateField();
-        instance.somethingHappen();
 
-        // TODO: please modify the following code to pass the test
-        // <--start
-        final Optional<Integer> expected = Optional.of(2019);
-        // --end-->
-
-        assertEquals(expected.get().intValue(), instance.getYear());
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void should_refer_inner_class_from_outside() {
         InnerClassUpdateField instance = new InnerClassUpdateField();
+        InnerClassUpdateField.InnerClass innerClass = instance.new InnerClass();
 
-        InnerClassUpdateField.YearIncrementer incrementer = instance.new YearIncrementer();
-        incrementer.increment();
+        innerClass.method();
+        assertEquals(2020,instance.getYear());
+    }
 
-        // TODO: please modify the following code to pass the test
-        // <--start
-        final Optional<Integer> expected = Optional.of(2019);
-        // --end-->
+    @Test
+    void should_test_inner() {
+        InnerClassUpdateField instance  =new InnerClassUpdateField(2018);
+        InnerClassUpdateField.InnerClass innerClass = instance.new InnerClass(2);
 
-        assertEquals(expected.get().intValue(), instance.getYear());
+        assertEquals(2020,instance.getYear());
+    }
+
+    @Test
+    void should_test_inner_add() {
+        InnerClassUpdateField instance  =new InnerClassUpdateField(2018);
+        InnerClassUpdateField.InnerClass innerClass = instance.new InnerClass(2);
+
+        innerClass.add();
+
+        assertEquals(2020,instance.getYear());
+    }
+
+    @Test
+    void should_test_outer_add() {
+        InnerClassUpdateField instance  =new InnerClassUpdateField(2018);
+        instance.add();
+
+        assertEquals(2020,instance.getYear());
     }
 
     @SuppressWarnings("ConstantConditions")

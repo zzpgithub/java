@@ -12,13 +12,12 @@ public class LocalClassUpdateField {
     }
 
     public void somethingHappen() {
-        class YearIncrementer {
-            @SuppressWarnings("WeakerAccess")
+        //int year = 0;       /////
+        class YearIncrementer {                /////localClass
             public void increment() {
                 ++year;
             }
         }
-
         new YearIncrementer().increment();
     }
 }
