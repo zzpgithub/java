@@ -27,30 +27,35 @@ class DistinctIterator<E> implements Iterator<E> {
     // TODO: Implement the class to pass the test. Note that you cannot put all items into memory or you will fail.
     // <--start
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private List<E> list = new ArrayList<>();
+    private Set<E> resultSet = new HashSet<>();
     private final Iterator<E> iterator;
+    private E currentElement;
 
     DistinctIterator(Iterator<E> iterator) {
         this.iterator = iterator;
-        while(this.iterator.hasNext()){
-            E element = this.iterator.next();
-            if(!element.equals(this.iterator.next())){
-                list.add(element);
-            }
-
-        }
-
     }
 
     @Override
     public boolean hasNext() {
-        return iterator.hasNext();
+        //currentElement = iterator.next();
+        while (iterator.hasNext()){
+            currentElement = iterator.next();
+            if(resultSet.contains(currentElement)){
+                return false;
+            }else{
+                resultSet.add(currentElement);
+                return true;
+            }
+        }
+        return false;
+        //return iterator.hasNext();
         //throw new NotImplementedException();
     }
 
     @Override
     public E next() {
-        return iterator.next();
+        return currentElement;
+        //return iterator.next();
         //throw new NotImplementedException();
     }
     // --end->
