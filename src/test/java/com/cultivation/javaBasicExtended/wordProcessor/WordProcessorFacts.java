@@ -1,6 +1,7 @@
 package com.cultivation.javaBasicExtended.wordProcessor;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,8 +11,7 @@ class WordProcessorFacts {
     void should_throw_on_null() {
         final int validWidth = 10;
 
-        assertThrows(IllegalArgumentException.class, () ->
-            new TextProcessor(validWidth).process(null));
+        assertThrows(IllegalArgumentException.class, () -> new TextProcessor(validWidth).process(null));
     }
 
     @Test
@@ -21,6 +21,15 @@ class WordProcessorFacts {
         for (int invalidWidth : invalidWidths) {
             assertThrows(IllegalArgumentException.class, () ->
                 new TextProcessor(invalidWidth).process(null));
+        }
+    }
+
+    @Test
+    void should_process_illegal_character() {
+        try {
+            String processed = new TextProcessor(10).process("wo rd #$");
+        } catch (Exception e) {
+            assertEquals("ERROR: Invalid character detected!", e.getMessage());
         }
     }
 

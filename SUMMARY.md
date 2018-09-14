@@ -652,6 +652,10 @@ Command + option + T 包围代码（使用if..else, try..catch, for, synchronize
 
 
 
+#第二周
+ + Throwable  --------> Error : unchecked异常
+ + Throwable  --------> Exception -------> RuntimeException
+ 其中Exception为checked异常，Exception中包含RuntimeException（如：ArrayIndexOutOfBoundsException，ArithmeticException）等为unchecked异常
 
 
 

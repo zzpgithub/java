@@ -1,22 +1,25 @@
 package com.cultivation.javaBasic;
 
 import com.cultivation.javaBasic.util.AnimeCharacter;
+import com.cultivation.javaBasic.util.InterfaceWithOverrideDefaultImpl;
 import com.cultivation.javaBasic.util.KeyValuePair;
 import com.cultivation.javaBasic.util.ValueHolder;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.swing.text.html.Option;
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StreamingTest {
@@ -394,7 +397,7 @@ class StreamingTest {
     }
 
     @Test
-    void should_test_stream_peek() {
+    void should_test_stream_peek() {    //////peek可以改值， 但是不应该这么做， 消费型接口，没输出的。
 
         ValueHolder<Integer> valueHolder = new ValueHolder();
         valueHolder.setValue(0);
@@ -413,7 +416,7 @@ class StreamingTest {
         Class errorType = new NoSuchElementException().getClass();
         // --end-->
 
-        assertThrows(errorType, empty::get);
+        assertThrows(errorType, empty::get); /////empty::get get没有执行 是一个method reference,通过assertThrows函数之后执行
     }
 
     @Test
@@ -450,9 +453,19 @@ class StreamingTest {
         // TODO: please add the upper-cased value to result if `optional` is present in `Consumer<Optional<String>>`
         // TODO: implementation.
         // <--start
-        Consumer<Optional<String>> optionalConsumer = (x) -> {
-            result.add(x.get().toUpperCase());
+//        Consumer<Optional<String>> optionalConsumer = (x) -> {
+//            if(x.isPresent()) {
+//                result.add(x.get().toUpperCase());
+//            }
+//        };
+        Consumer<Optional<String>> optionalConsumer = (x) ->{
+            x.ifPresent(item -> result.add(item.toUpperCase()));
         };
+//        Consumer<Optional<String>> optionalConsumer = x -> {
+//            x.ifPresent((Consumer<String>) i -> {
+//                result.add(i.toUpperCase());
+//            });
+//        };
         // --end-->
 
         optionalConsumer.accept(optional);
@@ -472,14 +485,16 @@ class StreamingTest {
         // TODO: please add the upper-cased value to `result` list if optional is present. Then return the boolean
         // TODO: mapping result of `result.add`.
         // <--start
-        Function<Optional<String>, Optional<Boolean>> mapping = (optStr) -> {
-            Optional<Boolean> finalResult = Optional.empty();
-            if(optStr.isPresent()){
-                result.add(optStr.get().toUpperCase());
-                return finalResult.of(true);
-            }
-            return finalResult;
-        };
+//        Function<Optional<String>, Optional<Boolean>> mapping = (optStr) -> {
+//            Optional<Boolean> finalResult = Optional.empty();
+//            if(optStr.isPresent()){
+//                result.add(optStr.get().toUpperCase());
+//                return finalResult.of(true);
+//            }
+//            return finalResult;
+//        };
+
+        Function<Optional<String>, Optional<Boolean>> mapping = (input) -> input.map(items -> result.add(items.toUpperCase()));
         // --end-->
 
         Optional<Boolean> mappingResult = mapping.apply(optional);
@@ -503,7 +518,35 @@ class StreamingTest {
         // TODO: The `findFirstAndGet` interface will find first item in stream. If it can be found, map it with
         // TODO: `YieldOptional.get` method. Otherwise, returns empty Optional.
         // <--start
-        Function<Stream<YieldOptional>, Optional<String>> findFirstAndGet = null;
+//        Function<Stream<YieldOptional>, Optional<String>> findFirstAndGet = (inputStream) -> {
+////            if(inputStream.count() > 0){
+////                return new YieldOptional().get();
+////            }else{
+////                return Optional.empty();
+////            }
+////
+////        };
+
+//        Function<Stream<YieldOptional>, Optional<String>> findFirstAndGet = (inputStream) -> {
+//            Optional<YieldOptional> value = inputStream.findFirst();
+//            if(value.isPresent()){
+//                return value.get().get();
+//            }
+//            else{
+//                return Optional.empty();
+//            }
+//        };
+
+        Function<Stream<YieldOptional>, Optional<String>> findFirstAndGet = (inputStream) -> {
+            Optional<YieldOptional> value = inputStream.findFirst();
+            if(value.isPresent()){
+                return value.flatMap( YieldOptional::get);
+            }
+            else{
+                return Optional.empty();
+            }
+        };
+
         // --end-->
 
         Optional<String> emptyStreamResult = findFirstAndGet.apply(emptyStream);
@@ -516,19 +559,68 @@ class StreamingTest {
 
     @SuppressWarnings({"ConstantConditions", "unused"})
     @Test
-    void should_collect_result() {
-        Stream<String> stream = Stream.of("Hello", "What", "is", "your", "name");
+    void should_collect_result() {    //////https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
+        Stream<String> stream = Stream.of("a", "b", "c", "d", "e", "f");
 
-        // TODO: please implement toList collector using `stream.collect`. You cannot use existing `toList` collector.
-        // <--start
-        ArrayList<String> list = null;
-        // --end-->
+        int[] count  = new int[]{0,0,0};
 
-        assertEquals(ArrayList.class, list.getClass());
-        assertIterableEquals(
-            Arrays.asList("Hello", "What", "is", "your", "name"),
-            list
-        );
+//        ArrayList<String> list = stream.parallel().collect(() -> {
+//                count[0]++;
+//                return new ArrayList<String>();
+//                },
+//
+//                (strings, element) -> {
+//                    count[1]++;
+//                    strings.add(element);
+//                },
+//                (strings, strings1) -> {      //////// 　第三个参数与并行有关的， 并行计算是不稳定的（每次运行次数不一样）， 如果不使用并行， 第三个是不运行，但是要写
+//                    strings.addAll(strings);
+//                    count[2]++;
+//                });
+///////直接使用toList:
+        List<String> collect = stream.collect(toList());
+        assertIterableEquals(Arrays.asList("a","b","c", "d", "e", "f"), collect);
+        //assertTrue(count[0] == count[2]);
+       // assertEquals(6,count[0]);
+        //assertEquals(list.size(),count[1]);
+       // assertEquals(6,count[2]);
+
+       // assertEquals(ArrayList.class, list.getClass());
+        //assertIterableEquals(Arrays.asList("a","b","c", "d", "e", "f"), list);
+
+    }
+
+    @Test
+    void should_test_collect_collector() {   //////测试
+        Integer[] test = new Integer[]{0,1,2,3,4,5,6,7,8};
+        Stream<Integer> stream = Arrays.stream(test);
+        //Stream<Integer> t = Stream.iterate(0,i->i+1).limit(9);
+
+        Map<Integer, List<Integer>> result = stream.collect(Collector.of(
+                HashMap::new,
+
+                (map, item) -> {
+                    if(!map.containsKey(item.intValue()%3)){
+                        map.put(item.intValue()%3, new ArrayList<>());
+                        map.get(item.intValue()%3).add(item);
+                    }else{
+                        map.get(item.intValue()%3).add(item);
+                    }
+                },
+                (map1, map2) -> {
+                    map1.putAll(map2);
+                    return map1;
+                }
+        ));
+        HashMap<Integer, List<Integer>> expected = new HashMap<>();
+        expected.put(0,Arrays.asList(0,3,6));
+        expected.put(1,Arrays.asList(1,4,7));
+        expected.put(2,Arrays.asList(2,5,8));
+
+        for (int i = 0; i < 3; i++) {
+            assertArrayEquals(expected.get(i).toArray(),result.get(i).toArray());
+        }
+
     }
 
     @SuppressWarnings({"ConstantConditions", "unused"})
@@ -542,7 +634,13 @@ class StreamingTest {
 
         // TODO: please implement toMap collector using `stream.collect`. You cannot use existing `toMap` collector.
         // <--start
-        HashMap<String, Integer> map = null;
+        HashMap<String, Integer> map = stream.collect(
+                HashMap::new,
+                (hashMap, var) -> {
+                    hashMap.put(var.getKey(),var.getValue());
+                },
+                HashMap::putAll
+        );
         // --end-->
 
         assertEquals(2, map.size());
@@ -563,7 +661,31 @@ class StreamingTest {
 
         // TODO: implement grouping collector using `stream.collect`. You cannot use existing `groupingBy` collector.
         // <--start
-        HashMap<String, List<Integer>> map = null;
+        HashMap<String, List<Integer>> map = stream.collect(
+
+                HashMap::new,
+
+
+                (listHashMap, keyValuePair) -> {
+                    String stringKey = keyValuePair.getKey();
+                    Integer integerValue = keyValuePair.getValue();
+                if(listHashMap.containsKey(stringKey)){
+                    listHashMap.get(stringKey).add(integerValue);
+                }else{
+                    listHashMap.put(stringKey, new ArrayList<>());
+                    listHashMap.get(stringKey).add(integerValue);
+                } },
+
+
+                (resultHashMap, addedHashMap) -> addedHashMap.forEach((s, integers) -> {
+                    if(resultHashMap.containsKey(s)){
+                        resultHashMap.get(s).addAll(integers);
+                    }
+                    else{
+                        resultHashMap.put(s,integers);
+                    }
+        })
+        );
         // --end-->
 
         assertEquals(2, map.size());
@@ -573,16 +695,51 @@ class StreamingTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    void should_collect_to_group_continued() {
+    void should_collect_to_group_continued_homework() {   ///////////////////////作业
         Stream<KeyValuePair<String, Integer>> stream = Stream.of(
-            new KeyValuePair<>("Harry", 2002),
-            new KeyValuePair<>("Bob", 2014),
-            new KeyValuePair<>("Harry", 2033)
+                new KeyValuePair<>("Harry", 2002),
+                new KeyValuePair<>("Bob", 2014),
+                new KeyValuePair<>("Harry", 2033)
         ).parallel();
 
         // TODO: implement grouping collector using `stream.collect`. This time please use `Collectors.groupingBy`
         // <--start
-        Map<String, List<Integer>> map = null;
+        Map<String, List<Integer>> map = stream.collect(
+                Collectors.groupingBy(KeyValuePair::getKey,
+                        Collector.of(ArrayList::new,
+                                (list, item) -> {
+                                    list.add(item.getValue());
+                                },
+
+                                (list1, list2) -> {
+                                    list1.addAll(list2);
+                                    return list1;
+                                }
+                        )
+
+                ));
+        // --end-->
+
+        assertEquals(2, map.size());
+        assertIterableEquals(Arrays.asList(2002, 2033), map.get("Harry"));
+        assertIterableEquals(Collections.singletonList(2014), map.get("Bob"));
+    }
+
+    @Test
+    void should_collect_to_group_continued() {
+        Stream<KeyValuePair<String, Integer>> stream = Stream.of(
+                new KeyValuePair<>("Harry", 2002),
+                new KeyValuePair<>("Bob", 2014),
+                new KeyValuePair<>("Harry", 2033)
+        ).parallel();
+
+        // TODO: implement grouping collector using `stream.collect`. This time please use `Collectors.groupingBy`
+        // <--start
+        Map<String, List<Integer>> map = stream.collect(
+                Collectors.groupingBy(KeyValuePair::getKey,
+                          mapping(item -> item.getValue(),
+                                         Collectors.toList())
+                ));
         // --end-->
 
         assertEquals(2, map.size());
@@ -602,7 +759,8 @@ class StreamingTest {
         // TODO: implement grouping collector using `stream.collect`. You should use `Collectors.groupingBy` and
         // TODO: downstream collector.
         // <--start
-        Map<String, Long> map = null;
+        Map<String, Long> map = stream.collect(Collectors.groupingBy(KeyValuePair::getKey,
+                Collectors.counting()));
         // --end-->
 
         assertEquals(2, map.size());
@@ -611,6 +769,57 @@ class StreamingTest {
     }
 
     @SuppressWarnings({"ConstantConditions", "unused"})
+    @Test
+    void should_calculate_sum_of_each_group_test() {
+        Stream<KeyValuePair<String, Integer>> stream = Stream.of(
+                new KeyValuePair<>("Harry", 2002),
+                new KeyValuePair<>("Bob", 2014),
+                new KeyValuePair<>("Harry", 2033)
+        ).parallel();
+
+        // TODO: implement grouping collector using `stream.collect`. You should use `Collectors.groupingBy` and
+        // TODO: downstream collector.
+        // <--start  ////<R, A> R collect(Collector<? super T, A, R> collector); collect输入Collector, 返回R，
+                    ////这里R为map, 所以对应Collector第三个参数为map
+
+        ////   Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,Collector<? super T, A, D> downstream)
+        //////       这里返回的就是Collector<T, ?, Map<K, D>> ，第三个参数已经是map类型。  通过groupingBy之后已经是map了。
+        Map<String, Integer> map = stream.collect(Collectors.groupingBy(
+                ////    Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,  指定以什么key分流
+                //                                  Supplier<M> mapFactory, ////如果不指定的话， 会默认使用map
+                //                                  Collector<? super T, A, D> downstream) /// 第三个参数输入的是 Collector
+                KeyValuePair::getKey,
+ //对Collect.of返回的也是一个Collector<T, A, R>类型， 所以这里可以用Collector的of 方法重写
+//        public static<T, A, R> Collector<T, A, R> of(Supplier<A> supplier,   产生A
+//                BiConsumer<A, T> accumulator,     这里T为流中元素
+//                BinaryOperator<A> combiner,
+//                Function<A, R> finisher,
+//                Characteristics... characteristics)
+                Collector.of(ArrayList::new,  /////通过Supplier生成Arraylist
+                        (list, item) -> {         /////list为Supplier产生类型，  item为流中元素（这里为integer类型）
+                            list.add(item.getValue());
+                        },
+
+                        (list1, list2) -> {
+                            list1.addAll(list2);
+                            return list1;
+                        },
+                        (listResult) -> {        ////将A转为R
+                             int sum = 0;
+                            for(int index = 0; index<listResult.size(); index++){
+                                sum += (int)listResult.get(index);
+                            }
+                            return new Integer(sum);
+                        }
+                )
+        ));
+        // --end-->
+
+        assertEquals(2, map.size());
+        assertEquals(4035, map.get("Harry").intValue());
+        assertEquals(2014, map.get("Bob").intValue());
+    }
+
     @Test
     void should_calculate_sum_of_each_group() {
         Stream<KeyValuePair<String, Integer>> stream = Stream.of(
@@ -622,7 +831,10 @@ class StreamingTest {
         // TODO: implement grouping collector using `stream.collect`. You should use `Collectors.groupingBy` and
         // TODO: downstream collector.
         // <--start
-        Map<String, Integer> map = null;
+        Map<String, Integer> map = stream.collect(Collectors.groupingBy(
+                KeyValuePair::getKey,
+                Collectors.summingInt(KeyValuePair::getValue))
+        );
         // --end-->
 
         assertEquals(2, map.size());
@@ -637,11 +849,11 @@ class StreamingTest {
         Stream
             .iterate(1, i -> i + 1)
             .limit(100)
-            .forEach(numbers::add);
+            .forEach(e -> numbers.add(e));
 
         // TODO: please modify the following code to pass the test
         // <--start
-        Optional<Integer> reduced = null;
+        Optional<Integer> reduced = Optional.ofNullable(numbers.stream().mapToInt(x -> x).reduce(0, Integer::sum));
         // --end-->
 
         //noinspection ConstantConditions
@@ -655,7 +867,9 @@ class StreamingTest {
 
         // TODO: please calculate the total number of characters using `reduce`.
         // <--start
-        Integer total = null;
+        //Integer total = words.stream().map(x -> x.length()).reduce(0, Integer::sum);
+
+        Integer total = words.stream().reduce(0,(sum, str) -> sum + str.length(),(a,b) -> 0);
         // --end-->
 
         assertEquals(15, total.intValue());
