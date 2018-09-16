@@ -140,12 +140,14 @@ class GenericTest {
     @SuppressWarnings("unused")
 
     private static void swap(Pair<?> pair) {
+        Object temp = pair.getFirst(); ///取出来是个Object
+        //pair.setSecond(temp);  error, 不能被赋值， 应为不知道？是什么类型。
         swapHelper(pair);
         //throw new NotImplementedException();
     }
     // TODO: You can add additional method within the range if you like
     // <--start
-    private static <T> void swapHelper(Pair<T> pair) {
+    private static <T> void swapHelper(Pair<T> pair) {  ///将 ？视为一种 不知道是什么类型的 类型 传给T进行处理。
         T temp = pair.getFirst();
         pair.setFirst(pair.getSecond());
         pair.setSecond(temp);

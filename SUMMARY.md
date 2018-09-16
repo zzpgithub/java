@@ -653,9 +653,66 @@ Command + option + T 包围代码（使用if..else, try..catch, for, synchronize
 
 
 #第二周
- + Throwable  --------> Error : unchecked异常
- + Throwable  --------> Exception -------> RuntimeException
- 其中Exception为checked异常，Exception中包含RuntimeException（如：ArrayIndexOutOfBoundsException，ArithmeticException）等为unchecked异常
+### Exception
+
+- Throwable  --------> Error : unchecked异常
+
+- Throwable  --------> Exception -------> RuntimeException
+
+  其中Exception为checked异常，Exception中包含RuntimeException（如：ArrayIndexOutOfBoundsException，ArithmeticException）等为unchecked异常
+
+  unchecked异常：not specify，无法实现预料的，未知的。
+
+  checked异常： 可以预先预料出现的异常，如文件找不到。
+
+- 方法签名不包括throws exception.
+
+- 抛出异常：specify a cathch.  unchecked异常一般不抛出
+
+- **try** ：try{…}语句块选定捕获异常的范围，将可能出现异常的代码放在try语句块中。
+
+  **catch ( )**： 在catch语句块中是对异常对象进行处理的代码。可以有一个或多个catch语句
+
+  - 捕获异常的有关信息
+    - getMessage( ) 方法，用来得到有关异常事件的信息
+    - printStackTrace( )用来跟踪异常事件发生时执行堆栈的内容。
+
+- **finally**
+
+  - 不论在try、catch代码块中是否发生了异常事件，finally块中的语句都会被执行。
+
+- Try-with-source :链接https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+
+  - 资源（source）用完必须关闭
+  - 注意关闭资源顺序 The close methods of resources are called in the opposite order of their creation.
+  - 只会关闭非空资源
+
+### 泛型
+
+- 泛型不能传入基本数据类型。
+- 泛型，编译过程中将类型擦除， 擦除为object. 但是如果是有边界的，例如<T extend Number>，会擦除成其边界Number
+- lower bounded . 例如：List<? extends Number>.     ？为Number的子类型。
+- upper bounded. 例如： <? super A>.      ? 为A的类型的父类型。
+- https://docs.oracle.com/javase/tutorial/java/generics/unboundedWildcards.html
+
+### 集合
+
+- iterable接口: 可迭代的， 在iterable中含有iterator接口
+- 重写iterator方法， 实现通过foreach方式遍历对象。
+- `ArrayList`顺序表存储, `LinkedList`内部以链表的形式来保存元素, `ArrayDeque`双向顺序存储
+- `HashSet`元素没有以某种特定顺序来存放.   `LinkedHashSet`,按元素插入顺序存放，有序的set
+- https://docs.oracle.com/javase/8/docs/technotes/guides/language/foreach.html
+
+### stream
+
+1.将数组，list转化为stream.
+
+2 Stream中用泛型传入Object。 IntStream做了一个原始类型的,其中传入的是int
+
+3.stream是不可变， filter会生成新的stream.
+
+4.通过terminal operation，才会执行处理stream的中间操作。
+
 
 
 

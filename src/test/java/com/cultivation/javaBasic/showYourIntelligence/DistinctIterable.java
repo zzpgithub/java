@@ -41,7 +41,6 @@ class DistinctIterator<E> implements Iterator<E> {
         while (iterator.hasNext()){
             currentElement = iterator.next();
             if(resultSet.contains(currentElement)){
-                return false;
             }else{
                 resultSet.add(currentElement);
                 return true;
